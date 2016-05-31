@@ -1,9 +1,8 @@
 require_relative 'contact'
 
-# Interfaces between a user and their contact list. Reads from and writes to standard I/O.
+
 class ContactList
 
-  # TODO: Implement user interaction. This should be the only file where you use `puts` and `gets`.
     command = ARGV
     case 
     when command == ['list']
@@ -19,7 +18,7 @@ class ContactList
         email = STDIN.gets.chomp
         if !(email =~ /.*@.*/)
           puts "Invalid email."
-        elsif Contact.all.include?(email)
+        elsif Contact.all.flatten.any? {|entry| entry.include?(email)}
           puts "Cannot add duplicate email."
         else
         Contact.create(name, email)
@@ -29,7 +28,7 @@ class ContactList
 
     when command.length == 2 && command[0] == 'show'
       
-      id = command[1].to_i
+      id = command[1].to_i 
       contact = Contact.find(id)
       
       if contact
@@ -44,10 +43,10 @@ class ContactList
       puts Contact.search(search_string)
     
     else
-    puts "Here is a list of available commands:
-      new    - Create a new contact
-      list   - List all contacts
-      show   - Show a contact
-      search - Search contacts"
+      puts "Here is a list of available commands:
+        new    - Create a new contact
+        list   - List all contacts
+        show [id]   - Show a contact
+        search [string] - Search contacts"
     end
 end
