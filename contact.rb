@@ -48,13 +48,16 @@ class Contact
     # @return [Contact, nil] the contact with the specified id. If no contact has the id, returns nil.
     def find(id)
       # TODO: Find the Contact in the 'contacts.csv' file with the matching id.
+      return false if self.all.length <= id || id < 0
+      self.all[id-1]
     end
     
     # Search for contacts by either name or email.
     # @param term [String] the name fragment or email fragment to search for
     # @return [Array<Contact>] Array of Contact objects.
-    def search(term)
-      # TODO: Select the Contact instances from the 'contacts.csv' file whose name or email attributes contain the search term.
+    def search(search_string)
+    # TODO: Select the Contact instances from the 'contacts.csv' file whose name or email attributes contain the search term.
+      self.all.select {|entry| entry.to_s.downcase.strip.include?(search_string)}
     end
 
   end
