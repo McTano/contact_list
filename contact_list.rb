@@ -4,47 +4,50 @@ require_relative 'contact'
 class ContactList
 
   # TODO: Implement user interaction. This should be the only file where you use `puts` and `gets`.
-  def self.command(arg)
-    case
-    when arg == []
-      puts "Here is a list of available commands:
-        new    - Create a new contact
-        list   - List all contacts
-        show   - Show a contact
-        search - Search contacts"
-
-    when arg == ['list']
+    command = ARGV
+    case 
+    when command == ['list']
       Contact.all.each_with_index do |entry, i|
         puts "#{i + 1}. #{entry}"
       end
 
-    when arg == ['new']
+    when command == ['new']
       puts "Enter name: "
       name = STDIN.gets.chomp
-      puts "Enter email"
-      email = STDIN.gets.chomp
-      Contact.create(name, email)
-
-    when arg.length == 2 && arg[0] == 'show'
-      
-      id = arg[1].to_i
-      contact = Contact.find(id)
-      
-      if contact == false
-        puts "No contact matching ID #{id}."
-      else
-        puts "#{id}.  #{contact}"
+      loop do
+        puts "Enter email"
+        email = STDIN.gets.chomp
+        if !(email =~ /.*@.*/)
+          puts "Invalid email."
+        elsif Contact.all.include?(email)
+          puts "Cannot add duplicate email."
+        else
+        Contact.create(name, email)
+        break
+        end
       end
 
-    when arg.length >= 2 && arg[0] == 'search'
+    when command.length == 2 && command[0] == 'show'
       
-      search_string = arg[1..-1].join(' ').downcase.strip
+      id = command[1].to_i
+      contact = Contact.find(id)
+      
+      if contact
+        puts "#{id}.  #{contact}"
+      else
+        puts "No contact matching ID #{id}."
+      end
+
+    when command.length >= 2 && command[0] == 'search'
+      
+      search_string = command[1..-1].join(' ').downcase.strip
       puts Contact.search(search_string)
     
     else
-      puts "Oh no! #{arg}"
+    puts "Here is a list of available commands:
+      new    - Create a new contact
+      list   - List all contacts
+      show   - Show a contact
+      search - Search contacts"
     end
-  end
 end
-
-ContactList.command(ARGV)

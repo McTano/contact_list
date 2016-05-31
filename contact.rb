@@ -26,12 +26,8 @@ class Contact
     # @return [Array<Contact>] Array of Contact objects
     def all
       # TODO: Return an Array of Contact instances made from the data in 'contacts.csv'.
-      all_contacts = []
-      CSV.foreach('contacts.csv') do |row|
-        name, email = row[0], row[1]
-        all_contacts << Contact.new(name, email)
-      end
-      all_contacts
+      all_contacts = CSV.read('contacts.csv')
+      all_contacts.map {|arr| Contact.new(arr[0], arr[1])}
     end
 
     # Creates a new contact, adding it to the csv file, returning the new contact.
