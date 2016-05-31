@@ -11,6 +11,12 @@ class Contact
   # @param email [String] The contact's email address
   def initialize(name, email)
     # TODO: Assign parameter values to instance variables.
+    @name = name
+    @email = email
+  end
+
+  def to_s
+    "#{name} : #{email}"
   end
 
   # Provides functionality for managing contacts in the csv file.
@@ -20,6 +26,12 @@ class Contact
     # @return [Array<Contact>] Array of Contact objects
     def all
       # TODO: Return an Array of Contact instances made from the data in 'contacts.csv'.
+      all_contacts = []
+      CSV.foreach('contacts.csv') do |row|
+        name, email = row[0], row[1]
+        all_contacts << Contact.new(name, email)
+      end
+      all_contacts
     end
 
     # Creates a new contact, adding it to the csv file, returning the new contact.
@@ -27,6 +39,8 @@ class Contact
     # @param email [String] the contact's email
     def create(name, email)
       # TODO: Instantiate a Contact, add its data to the 'contacts.csv' file, and return it.
+      CSV.open('contacts.csv', 'a') { |csv| csv << [name, email] }
+      Contact.new(name, email)
     end
     
     # Find the Contact in the 'contacts.csv' file with the matching id.
@@ -46,3 +60,4 @@ class Contact
   end
 
 end
+
